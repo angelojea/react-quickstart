@@ -1,0 +1,97 @@
+{% if params["entityform"].size > 0 %}
+    {% entityform name: params["entityform"] %}
+{% elsif params["template"].size > 0 %}
+    {% capture command %}
+        {%  include   params["template"]  %}
+    {% endcapture %}
+    {{command}}
+{% elsif params["snippet"].size > 0 %}
+    {% assign content = snippets[params["snippet"]] %}
+    {% if content %}
+        {{ content }}
+    {% else %}
+        No snippet was found.
+    {% endif %}
+{% elsif params["entitylist"].size > 0 %}
+{
+  {% entitylist key: params.entitylist %}
+  "create_enabled": "{{ entitylist.create_enabled }}",
+  "create_url": "{{ entitylist.create_url }}",
+  "detail_enabled": "{{ entitylist.detail_enabled }}",
+  "detail_id_parameter": "{{ entitylist.detail_id_parameter }}",
+  "detail_label": "{{ entitylist.detail_label }}",
+  "detail_url": "{{ entitylist.detail_url }}",
+  "empty_list_text": "{{ entitylist.empty_list_text }}",
+  "enable_entity_permissions": "{{ entitylist.enable_entity_permissions }}",
+  "entity_logical_name": "{{ entitylist.entity_logical_name	 }}",
+  "filter_account_attribute_name": "{{ entitylist.filter_account_attribute_name }}",
+  "filter_apply_label": "{{ entitylist.filter_apply_label }}",
+  "filter_definition": "{{ entitylist.filter_definition }}",
+  "filter_enabled": "{{ entitylist.filter_enabled }}",
+  "filter_portal_user_attribute_name": "{{ entitylist.filter_portal_user_attribute_name }}",
+  "filter_website_attribute_name": "{{ entitylist.filter_website_attribute_name }}",
+  "language_code": "{{ entitylist.language_code }}",
+  "page_size": "{{ entitylist.page_size }}",
+  "primary_key_name": "{{ entitylist.primary_key_name }}",
+  "search_enabled": "{{ entitylist.search_enabled }}",
+  "search_tooltip": "{{ entitylist.search_tooltip }}",
+  "views": [
+    {% for view in entitylist.views %}
+    {
+      "entity_logical_name": "{{view.entity_logical_name}}",
+      "id": "{{view.Id}}",
+      "language_code": "{{view.language_code}}",
+      "name": "{{view.Name}}",
+      "primary_key_logical_name": "{{view.primary_key_logical_name}}",
+      "sort_expression": "{{view.sort_expression}}",
+      "columns": [
+        {% for column in view.columns %}
+        {
+          "attribute_type": "{{column.attribute_type}}",
+          "logical_name": "{{column.logical_name}}",
+          "Name": "{{column.Name}}",
+          "sort_ascending": "{{column.sort_ascending}}",
+          "sort_descending": "{{column.sort_descending}}",
+          "sort_disabled": "{{column.sort_disabled}}",
+          "sort_enabled": "{{column.sort_enabled}}",
+          "width": "{{column.width}}"
+        }{% unless forloop.last %},{% endunless %}
+        {% endfor %}
+      ]
+    }{% unless forloop.last %},{% endunless %}
+    {% endfor %}
+  ]
+  {% endentitylist %}
+}
+{% elsif params["entityview"].size > 0 %}
+{
+  {% entityview id: params.entityview, page:params.page %}
+  "entity_permission_denied": "{{entityview.entity_permission_denied}}",
+  "entity_logical_name": "{{entityview.entity_logical_name}}",
+  "first_page": "{{entityview.first_page}}",
+  "Id": "{{entityview.Id}}",
+  "language_code": "{{entityview.language_code}}",
+  "last_page": "{{entityview.last_page}}",
+  "name": "{{entityview.name}}",
+  "next_page": "{{entityview.next_page}}",
+  "Page": "{{entityview.Page}}",
+  "page_size": "{{entityview.page_size}}",
+  "previous_page": "{{entityview.previous_page}}",
+  "primary_key_logical_name": "{{entityview.primary_key_logical_name}}",
+  "sort_expression": "{{entityview.sort_expression}}",
+  "total_pages": "{{entityview.total_pages}}",
+  "total_records": "{{entityview.total_records}}",
+  "records": [
+    {% for record in entityview.records %}
+    {
+      {% for column in entityview.columns %}
+      "{{column.Name}}": "{{record[column.logical_name]}}"{% unless forloop.last %},{% endunless %}
+      {% endfor %}
+    }{% unless forloop.last %},{% endunless %}
+    {% endfor %}
+  ]
+  {% endentityview %}
+}
+{% elsif params["record-id"].size > 0 %}
+{{entities["esi_portalrequest"][params["record-id"]]["esi_createdrecordid"]}}
+{% endif %}

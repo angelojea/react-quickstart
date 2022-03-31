@@ -1,0 +1,91 @@
+{%- fetchxml fetchContacts -%}
+<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>
+    <entity name='contact'>
+      <attribute name='entityimage' />
+      <filter type='and'>
+        <condition attribute="createdon" operator="le" value='{{ "today" | date: "yyyy-MM-dd HH:mm:ss.sss" }}' />
+        <condition attribute='statecode' operator='eq' value='0' />
+        <condition attribute='contactid' operator='eq' value='{{user.id}}' />
+      </filter>
+    </entity>
+</fetch>
+{%- endfetchxml -%}
+{% if fetchContacts.results.entities.size > 0 %}
+    {% assign entityimage = fetchContacts.results.entities[0]['entityimage'] | join: ',' %}
+{% else %}
+    {% assign entityimage = '' %}
+{% endif %}
+
+<!-- Server version -->
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" href="/icon-small.png" />
+    <link rel="manifest" href="/manifest.json" crossorigin="use-credentials" />
+    <link rel="preload" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" as="style"
+        onload='this.onload=null,this.rel="stylesheet"'>
+    <title>AOJ Dynamics PWA</title>
+    <script
+        type="text/javascript">var ua = navigator.userAgent, is_ie = ua.indexOf("MSIE ") > -1 || ua.indexOf("Trident/") > -1; if (is_ie) { document.ie = "true"; var ie_script = document.createElement("script"), ie_styles = document.createElement("link"); function injectScripts() { document.body.innerHTML = "", document.body.appendChild(ie_styles), document.body.appendChild(ie_script) } ie_script.src = "no-ie/init.js", ie_styles.rel = "stylesheet", ie_styles.href = "no-ie/styles.css", document.addEventListener ? document.addEventListener("DOMContentLoaded", injectScripts) : document.attachEvent("DOMContentLoaded", injectScripts) }</script>
+    <link href="/main.css" rel="stylesheet">
+</head>
+
+<body>
+    {% if user %}
+    <input type="hidden" id="signedin" value="true">
+    <input type="hidden" id="contactid" value="{{user.id}}">
+    <input type="hidden" id="user-image" value="{{entityimage}}">
+    {% else %}
+    <input type="hidden" id="signedin" value="false">
+    {% endif %}
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <script type="text/javascript">
+        var themeMode = localStorage.getItem("theme-mode"), initialBodyStyles = document.createElement("style"), currentBodyColor = "light" === themeMode ? "#fafafa" : "#111"; initialBodyStyles.innerText = "body { background-color: " + currentBodyColor + " }", document.head.appendChild(initialBodyStyles)</script>
+    <div id="root"></div>
+    <script src="/3.chunk.js"></script>
+    <script src="/main.js"></script>
+    <script src="/runtime.js"></script>
+</body>
+
+</html>
+
+<!-- Local version -->
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" href="/icon-small.png" />
+    <link rel="manifest" href="/manifest.json" crossorigin="use-credentials" />
+    <link rel="preload" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" as="style"
+        onload='this.onload=null,this.rel="stylesheet"'>
+    <title>AOJ Dynamics PWA</title>
+    <script src="http://localhost:3000/static/js/0.chunk.js"></script>
+    <script src="http://localhost:3000/static/js/1.chunk.js"></script>
+    <script
+        type="text/javascript">var ua = navigator.userAgent, is_ie = ua.indexOf("MSIE ") > -1 || ua.indexOf("Trident/") > -1; if (is_ie) { document.ie = "true"; var ie_script = document.createElement("script"), ie_styles = document.createElement("link"); function injectScripts() { document.body.innerHTML = "", document.body.appendChild(ie_styles), document.body.appendChild(ie_script) } ie_script.src = "no-ie/init.js", ie_styles.rel = "stylesheet", ie_styles.href = "no-ie/styles.css", document.addEventListener ? document.addEventListener("DOMContentLoaded", injectScripts) : document.attachEvent("DOMContentLoaded", injectScripts) }</script>
+</head>
+
+<body>
+    {% if user %}
+    <input type="hidden" id="signedin" value="true">
+    <input type="hidden" id="contactid" value="{{user.id}}">
+    <input type="hidden" id="user-image" value="{{entityimage}}">
+    {% else %}
+    <input type="hidden" id="signedin" value="false">
+    {% endif %}
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <script type="text/javascript">
+        var themeMode = localStorage.getItem("theme-mode"), initialBodyStyles = document.createElement("style"), currentBodyColor = "light" === themeMode ? "#fafafa" : "#111"; initialBodyStyles.innerText = "body { background-color: " + currentBodyColor + " }", document.head.appendChild(initialBodyStyles)</script>
+    <div id="root"></div>
+    <script src="http://localhost:3000/static/js/bundle.js"></script>
+    <script src="http://localhost:3000/static/js/2.chunk.js"></script>
+    <script src="http://localhost:3000/static/js/3.chunk.js"></script>
+    <script src="http://localhost:3000/static/js/main.chunk.js"></script>
+</body>
+
+</html>
